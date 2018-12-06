@@ -215,6 +215,42 @@ active_2months.delete()
 b.delete_temporary_bitop_keys()
 ```
 
+# Migration from previous verison
+
+- The API of the "bitmapist4.Bitmapist" instance is compatible with the API
+  of previous version of bitmapist (module-level), so it has to work
+  without any changes. The only exception is lack of the "system" attribute
+  for marking events. You are supposed to use different Bitmapist class
+  instances instead.
+- On a database level, new bitmapist4 uses "bitmapist_" prefix for Redis keys,
+  while old bitmapist uses "trackist_" for historical reasons. If you want
+  to keep using the old database, or want to use bitmapist and bitmapist4
+  against the same database, you need to explicitly set the key prefix
+  to "trackist_".
+- If you use bitmapist-server, make sure that you use the most recent version
+  of the server with the support of EXPIRE command. The command is used to
+  expire temporary bitop keys.
+
+
+Replace old code which could look like this:
+
+```python
+import bitmapist
+bitmapist.setup_redis('default', 'localhost', 6380)
+...
+bitmapist.mark_event('acive', user_id)
+```
+
+With something looking like this:
+
+```python
+from bitmapist4 import Bitmapist
+bitmapist = Bitmapist('redis://localhost:6380', key_prefix='trackist_')
+...
+bitmapist.mark_event('acive', user_id)
+```
+
+
 
 # bitmapist cohort
 
