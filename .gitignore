@@ -1,0 +1,8 @@
+.*.swp
+*.pyc
+*.egg-info
+/dist
+/.tox
+/.pytest_cache
+/bitmapist.db
+/dump.rdb
