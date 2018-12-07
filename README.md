@@ -254,7 +254,65 @@ bitmapist.mark_event('acive', user_id)
 
 # bitmapist cohort
 
-TODO.
+Cohort is a group of subjects who share a defining characteristic (typically
+subjects who experienced a common event in a selected time period, such as
+birth or graduation).
+
+You can get the cohort table using `bitmapist4.cohort.get_cohort_table()` 
+function. 
+
+Each row of this table answers the question "what part of the `cohort`
+performed `activity` over time", and Nth cell of that row represents the
+number of users (absolute or in percent) which still perform the activity
+N days (or weeks, or months) after.
+
+Each new column of the cohort unfolds the behavior of different similar
+cohorts over time. While 0th row displays the behavior of the cohort,
+provided as an argument, 1th row displays the behavior of the similar
+cohort, but shifted 1 day (or week, or month) ago, etc.
+
+For example, consider following cohort statistics
+
+```
+table = get_cohort_table(b.WeekEvents('registered'), b.WeekEvents('active'))
+```
+
+This table shows what's the rate of registered users is still active
+the same week after registration, then one week after, then two weeks
+after the registration, etc.
+
+The first row represents the statistics for this week's cohort (users,
+registered only this week), and naturally, will contain only one row:
+users, active this week.
+
+The second row represents the same statistics for users, registered last
+week. It will have two rows: the number of users, active during the
+registration week and the number of users active one week after the
+registration (that is, current week).
+
+
+Then you may render it yourself to HTML, or export to Pandas dataframe
+with df() method.
+
+Sample from user activity on http://www.gharchive.org/
+
+```python
+In [1]: from bitmapist4 import Bitmapist, cohort
+
+In [2]: b = Bitmapist()
+
+In [3]: cohort.get_cohort_table(b.WeekEvents('active'), b.WeekEvents('active'), rows=5, use_percent=False).df()
+Out[3]:
+            cohort       0        1        2        3        4
+2018-12-03  110466  110466      NaN      NaN      NaN      NaN
+2018-11-26  152027  152027  22682.0      NaN      NaN      NaN
+2018-11-19  121417  121417  22477.0  13947.0      NaN      NaN
+2018-11-12  150975  150975  22195.0  25833.0  18407.0      NaN
+2018-11-05  137420  137420  25480.0  18358.0  21575.0  16215.0
+```
+
+The dataframe can be further colorized (to be displayed in Jupyter notebooks)
+with stylize().
 
 
 ---
