@@ -27,26 +27,26 @@ def get_cohort_table(cohort, activity, rows=20, cols=None, use_percent=True):
     N days (or weeks, or months) after.
 
     Each new column of the cohort unfolds the behavior of different similar
-    cohorts over time. While 0th row displays the behavior of the cohort,
-    provided as an argument, 1th row displays the behavior of the similar
+    cohorts over time. The latest row displays the behavior of the cohort,
+    provided as an argument, the one above displays the behavior of the similar
     cohort, but shifted 1 day (or week, or month) ago, etc.
 
     For example, consider following cohort statistics
 
     >>> table = get_cohort_table(b.WeekEvents('registered'), b.WeekEvents('active'))
 
-    This table shows what's the rate of registered users is still active
-    the same week after registration, then one week after, then two weeks
-    after the registration, etc.
+    Columns of the table show what's the rate of registered users is still
+    active the same week after registration, then one week after, then two
+    weeks after the registration, etc.
 
-    The first row represents the statistics for this week's cohort (users,
-    registered only this week), and naturally, will contain only one row:
-    users, active this week.
+    By default the table displays 20 rows.
 
-    The second row represents the same statistics for users, registered last
-    week. It will have two rows: the number of users, active during the
-    registration week and the number of users active one week after the
-    registration (that is, current week).
+    The first row represents the statistics from cohort of users, registered
+    20 weeks ago. The second row represents the same statistics for users,
+    registered 19 week ago, and so on until finally the latest row shows users
+    registered this week. Naturally, the last row will contain only one cell,
+    the number of users that were registered this week AND were active this
+    week as well.
     """
     if cols is None:
         cols = rows
@@ -57,14 +57,14 @@ def get_cohort_table(cohort, activity, rows=20, cols=None, use_percent=True):
         base_activity = activity.delta(-cohort_offset)  # moving backward
         cohort_row = get_cohort_row(
             cohort_to_explore, base_activity, cols, use_percent=use_percent)
-        table.rows.append(cohort_row)
+        table.rows.insert(0, cohort_row)
     return table
 
 
 def get_cohort_row(cohort, activity, cols, use_percent=True):
     now = datetime.datetime.utcnow()
 
-    cohort_name = cohort.period_start().strftime('%F')
+    cohort_name = cohort.period_start().strftime('%d %b %Y')
     cohort_size = len(cohort)
 
     row = CohortRow(cohort_name, cohort_size)
@@ -123,14 +123,14 @@ def stylize(df, use_percent=True):
     else:
         string_formatter = '{:d}'
         max_value = df.max().max()
-    high_color = 250
-    low_color = 100
 
     def _color(value):
         if pd.isnull(value):
             return 'background-color: #CCCCCC'
-        normed = value * (high_color - low_color) / max_value + low_color
-        return 'background-color: #64{:0X}64'.format(int(normed))
+        normed_value = round(float(value) / max_value, 1)
+        bg = 'background-color: hsla(200, 80%, 50%, {})'.format(normed_value)
+        fg = 'color: hsla(200, 100%, 0%, {})'.format(normed_value + 0.5)
+        return ';'.join([bg, fg])
 
     def _fmt(value):
         if pd.isnull(value):

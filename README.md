@@ -267,8 +267,8 @@ number of users (absolute or in percent) which still perform the activity
 N days (or weeks, or months) after.
 
 Each new column of the cohort unfolds the behavior of different similar
-cohorts over time. While 0th row displays the behavior of the cohort,
-provided as an argument, 1th row displays the behavior of the similar
+cohorts over time. The latest row displays the behavior of the cohort,
+provided as an argument, the one above displays the behavior of the similar
 cohort, but shifted 1 day (or week, or month) ago, etc.
 
 For example, consider following cohort statistics
@@ -281,14 +281,14 @@ This table shows what's the rate of registered users is still active
 the same week after registration, then one week after, then two weeks
 after the registration, etc.
 
-The first row represents the statistics for this week's cohort (users,
-registered only this week), and naturally, will contain only one row:
-users, active this week.
+By default the table displays 20 rows.
 
-The second row represents the same statistics for users, registered last
-week. It will have two rows: the number of users, active during the
-registration week and the number of users active one week after the
-registration (that is, current week).
+The first row represents the statistics from cohort of users, registered
+20 weeks ago. The second row represents the same statistics for users,
+registered 19 week ago, and so on until finally the latest row shows users
+registered this week. Naturally, the last row will contain only one cell,
+the number of users that were registered this week AND were active this
+week as well.
 
 
 Then you may render it yourself to HTML, or export to Pandas dataframe
@@ -303,12 +303,12 @@ In [2]: b = Bitmapist()
 
 In [3]: cohort.get_cohort_table(b.WeekEvents('active'), b.WeekEvents('active'), rows=5, use_percent=False).df()
 Out[3]:
-            cohort       0        1        2        3        4
-2018-12-03  110466  110466      NaN      NaN      NaN      NaN
-2018-11-26  152027  152027  22682.0      NaN      NaN      NaN
-2018-11-19  121417  121417  22477.0  13947.0      NaN      NaN
-2018-11-12  150975  150975  22195.0  25833.0  18407.0      NaN
-2018-11-05  137420  137420  25480.0  18358.0  21575.0  16215.0
+             cohort       0        1        2        3        4
+05 Nov 2018  137420  137420  25480.0  18358.0  21575.0  18430.0
+12 Nov 2018  150975  150975  22195.0  25833.0  21165.0      NaN
+19 Nov 2018  121417  121417  22477.0  15796.0      NaN      NaN
+26 Nov 2018  152027  152027  25606.0      NaN      NaN      NaN
+03 Dec 2018  130470  130470      NaN      NaN      NaN      NaN
 ```
 
 The dataframe can be further colorized (to be displayed in Jupyter notebooks)
