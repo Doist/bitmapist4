@@ -227,9 +227,9 @@ b.delete_temporary_bitop_keys()
   to keep using the old database, or want to use bitmapist and bitmapist4
   against the same database, you need to explicitly set the key prefix
   to "trackist_".
-- If you use bitmapist-server, make sure that you use the most recent version
-  of the server with the support of EXPIRE command. The command is used to
-  expire temporary bitop keys.
+- If you use bitmapist-server, make sure that you use the version 1.2 or newer.
+  This version adds the support for  EXPIRE command which is used to expire
+  temporary bitop keys.
 
 
 Replace old code which could look like this:
