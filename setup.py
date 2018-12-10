@@ -68,6 +68,7 @@ setup(
     version=about['__version__'],
     description='Powerful analytics library using Redis bitmaps',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     author="Doist Team",
     author_email="dev@doist.com",
     url="https://github.com/Doist/bitmapist4",
