@@ -1,10 +1,10 @@
-## [4.0b1] - 2018-12-06
+## [4.0] - 2018-12-11
 
 Released the first beta version of bitmapist4. Main differences from the
 previous version.
 
 - Class-based configuration. To work with a specific storage and to set
-  some specific settings, a Bitmapist object is instantiaed
+  some specific settings, a Bitmapist object is instantiated
   instead of using global SYSTEM
 
 - Support for automatic and explicit expiration for temporary keys
@@ -12,5 +12,7 @@ previous version.
 
 - Cohort package rewritten to make more convenient usage with wider range of
   scenarios
+
+- Add support for transactions (wrappers around Redis pipelines)
 
 - Tests run against Redis and Bitmapist-server

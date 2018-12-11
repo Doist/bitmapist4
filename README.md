@@ -137,7 +137,7 @@ b.mark_event('active', 123, track_hourly=False)
 ```
 
 
-### Unique events
+## Unique events
 
 Sometimes data of the event makes little or no sense and you are more interested
 if that specific event happened at least once in a lifetime for a user. 
@@ -168,7 +168,7 @@ b.mark_event('premium', 1)
 assert 1 in b.UniqueEvents('premium')
 ``` 
 
-### Perform bit operations
+## Perform bit operations
 
 How many users that have been active last month are still active this month?
 
@@ -186,7 +186,7 @@ Operators `&`, `|`, `^` and `~` supported.
 This works with nested bit operations (imagine what you can do with this ;-))!
 
 
-### Deleting
+## Delete events
 
 If you want to permanently remove marked events for any time period you can use the `delete()` method:
 
@@ -215,13 +215,30 @@ active_2months.delete()
 b.delete_temporary_bitop_keys()
 ```
 
-# Migration from previous verison
+## Bulk updates with transactions
 
-- The API of the "bitmapist4.Bitmapist" instance is compatible with the API
-  of previous version of bitmapist (module-level), so it has to work
-  without any changes. The only exception is lack of the "system" attribute
-  for marking events. You are supposed to use different Bitmapist class
-  instances instead.
+If you often performs multiple updates at once, you can benefit from Redis
+pipelines, wrapped as transactions inside bitmapist.
+
+```python
+with b.transaction():
+    b.mark_event('active')
+    b.mark_event('song:played')
+```
+
+
+# Migration from previous version
+
+The API of the "bitmapist4.Bitmapist" instance is mostly compatible with the
+API of previous version of bitmapist (module-level). Notable changes outlined
+below.
+
+- Removed the "system" attribute for choosing the server. You are supposed to
+  use different Bitmapist class instances instead. If you used "system" to
+  work with pipelines, you should switch to transactions instead.
+- bitmapist.TRACK_HOURLY and bitmapist.TRACK_UNIQUE module-level constants
+  moved to bitmapist4.Bitmapist attributes and can be set up with a class
+  constructor.
 - On a database level, new bitmapist4 uses "bitmapist_" prefix for Redis keys,
   while old bitmapist uses "trackist_" for historical reasons. If you want
   to keep using the old database, or want to use bitmapist and bitmapist4
@@ -252,7 +269,7 @@ bitmapist.mark_event('acive', user_id)
 
 
 
-# bitmapist cohort
+# Bitmapist cohort
 
 Cohort is a group of subjects who share a defining characteristic (typically
 subjects who experienced a common event in a selected time period, such as
