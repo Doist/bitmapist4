@@ -216,7 +216,7 @@ class Bitmapist(object):
         Delete all events from the database.
         """
         keys = self.connection.keys('{}*'.format(self.key_prefix))
-        if len(keys) > 0:
+        if keys:
             self.connection.delete(*keys)
 
     def delete_temporary_bitop_keys(self):
@@ -224,7 +224,7 @@ class Bitmapist(object):
         Delete all temporary keys that are used when using bit operations.
         """
         keys = self.connection.keys('{}bitop_*'.format(self.key_prefix))
-        if len(keys) > 0:
+        if keys:
             self.connection.delete(*keys)
 
     def prefix_key(self, event_name, date):
