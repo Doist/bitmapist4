@@ -20,7 +20,8 @@ This Python library makes it possible to implement real-time, highly scalable an
 This library is very easy to use and enables you to create your own reports easily.
 
 Using Redis bitmaps you can store events for millions of users in a very little amount of memory (megabytes).
-You should be careful about using huge ids as this could require larger amounts of memory. Ids should be in range [0, 2^32).
+
+Note however that you should be careful about using huge ids as this could require larger amounts of memory. Ids should be in range [0, 2^32).
 
 Additionally bitmapist can generate cohort graphs that can do following:
 * Cohort over user retention
@@ -86,14 +87,19 @@ for uid in b.WeekEvents('active'):
     print(uid)
 ```
 
+Unmark that user 123 was active and had played a song:
+```python
+b.unmark_event('active', 123)
+b.unmark_event('song:played', 123)
+```
 
 To explore any specific day, week, month or year instead of the current one, 
-uou can create an event from any datetime object with a `from_date` static
+you can create an event from any datetime object with a `from_date` static
 method.
 
 ```python
 specific_date = datetime.datetime(2018, 1, 1)
-ev = b.MonthEvents('active').from_date(specific_date)
+ev = b.MonthEvents('active').from_date('active', specific_date)
 print(len(ev))
 ```
 
@@ -139,7 +145,7 @@ b.mark_event('active', 123, track_hourly=False)
 
 ## Unique events
 
-Sometimes data of the event makes little or no sense and you are more interested
+Sometimes the date of the event makes little or no sense and you are more interested
 if that specific event happened at least once in a lifetime for a user. 
 
 There is a `UniqueEvents` model for this purpose. The model creates only one
