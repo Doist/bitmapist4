@@ -116,10 +116,10 @@ class EventsOverTime(BaseEvents):
     """
     Events over a specified amount of time.
 
-    Example::
+    Example:
 
         date = datetime.strptime('19-02-19', '%d-%m-%y')
-        get_events_over_time('day', date, 36)
+        EventsOverTime('event_name', 'day', date, 36)
     """
 
     def __init__(self, event_name, scale, dt=None, delta=0):
@@ -130,21 +130,21 @@ class EventsOverTime(BaseEvents):
         
         events = []
         if scale == 'day':
-            events.append(self.bitmapist.DayEvents(event_name).from_date(event_name, dt))
+            events.append(self.bitmapist.DayEvents.from_date(event_name, dt))
             for i in range(delta):
-                events.append(self.bitmapist.DayEvents(event_name).from_date(event_name, dt).delta(-(i + 1)))
+                events.append(self.bitmapist.DayEvents.from_date(event_name, dt).delta(-(i + 1)))
         elif scale == 'week':
-            events.append(self.bitmapist.WeekEvents(event_name).from_date(event_name, dt))
+            events.append(self.bitmapist.WeekEvents.from_date(event_name, dt))
             for i in range(delta):
-                events.append(self.bitmapist.WeekEvents(event_name).from_date(event_name, dt).detla(-(i + 1)))
+                events.append(self.bitmapist.WeekEvents.from_date(event_name, dt).detla(-(i + 1)))
         elif scale == 'month':
-            events.append(self.bitmapist.MonthEvents(event_name).from_date(event_name, dt))
+            events.append(self.bitmapist.MonthEvents.from_date(event_name, dt))
             for i in range(delta):
-                events.append(self.bitmapist.MonthEvents(event_name).from_date(event_name, dt).delta(-(i + 1)))
+                events.append(self.bitmapist.MonthEvents.from_date(event_name, dt).delta(-(i + 1)))
         elif scale == 'year':
-            events.append(self.bitmapist.YearEvents(event_name).from_date(event_name, dt))
+            events.append(self.bitmapist.YearEvents.from_date(event_name, dt))
             for i in range(delta):
-                events.append(self.bitmapist.YearEvents(event_name).from_date(event_name, dt).delta(-(i + 1)))
+                events.append(self.bitmapist.YearEvents.from_date(event_name, dt).delta(-(i + 1)))
         if events:
             if len(events) == 1:
                 self.redis_key = events[0].redis_key
