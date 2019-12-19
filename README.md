@@ -93,13 +93,13 @@ b.unmark_event('active', 123)
 b.unmark_event('song:played', 123)
 ```
 
-To explore any specific day, week, month or year instead of the current one, 
+To explore any specific day, week, month or year instead of the current one,
 you can create an event from any datetime object with a `from_date` static
 method.
 
 ```python
 specific_date = datetime.datetime(2018, 1, 1)
-ev = b.MonthEvents('active').from_date('active', specific_date)
+ev = b.MonthEvents.from_date('active', specific_date)
 print(len(ev))
 ```
 
@@ -146,7 +146,7 @@ b.mark_event('active', 123, track_hourly=False)
 ## Unique events
 
 Sometimes the date of the event makes little or no sense and you are more interested
-if that specific event happened at least once in a lifetime for a user. 
+if that specific event happened at least once in a lifetime for a user.
 
 There is a `UniqueEvents` model for this purpose. The model creates only one
 Redis key and doesn't depend on the date.
@@ -172,7 +172,7 @@ populate the extra unique cohort for all marked keys
 b = bitmapist4.Bitmapist(track_unique=True)
 b.mark_event('premium', 1)
 assert 1 in b.UniqueEvents('premium')
-``` 
+```
 
 ## Perform bit operations
 
@@ -180,7 +180,7 @@ How many users that have been active last month are still active this month?
 
 ```python
 ev = b.MonthEvents('active')
-active_2months = ev & ev.prev() 
+active_2months = ev & ev.prev()
 print(len(active_2months))
 
 # Is 123 active for 2 months?
@@ -213,7 +213,7 @@ You may want to reset the cache explicitly:
 
 ```python
 ev = b.MonthEvents('active')
-active_2months = ev & ev.prev() 
+active_2months = ev & ev.prev()
 # Delete the temporary AND operation
 active_2months.delete()
 
@@ -281,8 +281,8 @@ Cohort is a group of subjects who share a defining characteristic (typically
 subjects who experienced a common event in a selected time period, such as
 birth or graduation).
 
-You can get the cohort table using `bitmapist4.cohort.get_cohort_table()` 
-function. 
+You can get the cohort table using `bitmapist4.cohort.get_cohort_table()`
+function.
 
 Each row of this table answers the question "what part of the `cohort`
 performed `activity` over time", and Nth cell of that row represents the
@@ -340,6 +340,6 @@ with stylize().
 
 ---
 
-Copyright: 2012-2018 by Doist Ltd.
+Copyright: 2012-2019 by Doist Ltd.
 
 License: BSD
