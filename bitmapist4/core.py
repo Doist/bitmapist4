@@ -44,8 +44,8 @@ class Bitmapist(object):
         kw = {'bitmapist': self}
         self.UniqueEvents = type('UniqueEvents', (ev.UniqueEvents, ),
                                  kw)  # type: Type[ev.UniqueEvents]
-        self.EventsOverTime = type('EventsOverTime', (ev.EventsOverTime, ),
-                                kw) # type; Type[ev.EventsOverTime]
+        self.RollingEvents = type('RollingEvents', (ev.RollingEvents, ),
+                                kw) # type; Type[ev.RollingEvents]
         self.YearEvents = type('YearEvents', (ev.YearEvents, ),
                                kw)  # type: Type[ev.YearEvents]
         self.MonthEvents = type('MonthEvents', (ev.MonthEvents, ),

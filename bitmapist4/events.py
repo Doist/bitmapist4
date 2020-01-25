@@ -112,14 +112,14 @@ class UniqueEvents(BaseEvents):
         return False
 
 
-class EventsOverTime(BaseEvents):
+class RollingEvents(BaseEvents):
     """
     Events over a specified amount of time.
 
     Example:
 
         date = datetime.strptime('19-02-19', '%d-%m-%y')
-        EventsOverTime('event_name', 'day', date, 36)
+        RollingEvents('event_name', 'day', date, 36)
     """
 
     def __init__(self, event_name, scale, dt=None, delta=0):
