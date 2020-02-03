@@ -211,23 +211,23 @@ class Bitmapist(object):
                 ret.add(event_name)
         return sorted(ret)
 
-    def get_rolling_events(self, event_name, scale='day', dt=None, delta=0):
+    def get_events_in_range(self, event_name, dt=None, delta=0, scale='day'):
         """
-        Return events over a specified amount of time.
+        Return events over a specified range.
         
         Useful for determining events like the following:
          * How many users used android between 1-12-19 and 4-12-19?
          * How many users used ios between February and May?
 
-        The scale value can be set to the string 'day', 'week', 'month', or 'year'.
         The dt value should be a datetime object.
         The delta value should be an integer.
+        The scale value can be set to the string 'day', 'week', 'month', or 'year'.
 
         Example:
 
             b = bitmapist4.Bitmapist()
             date = datetime.strptime('19-02-19', '%d-%m-%y')
-            b.get_rolling_events('device:android', 'day', date, 36)
+            b.get_events_in_range('device:android', date, 36, 'day')
         """
         dt = dt or datetime.datetime.utcnow()
         
