@@ -112,56 +112,6 @@ class UniqueEvents(BaseEvents):
         return False
 
 
-class RollingEvents(BaseEvents):
-    """
-    Events over a specified amount of time.
-
-    Example:
-
-        date = datetime.strptime('19-02-19', '%d-%m-%y')
-        RollingEvents('event_name', 'day', date, 36)
-    """
-
-    def __init__(self, event_name, scale, dt=None, delta=0):
-        self.event_name = event_name
-        self.scale = scale
-        self.dt = dt or datetime.datetime.utcnow()
-        self.delta = delta
-        
-        events = []
-        if scale == 'day':
-            events.append(self.bitmapist.DayEvents.from_date(event_name, dt))
-            for i in range(delta):
-                events.append(self.bitmapist.DayEvents.from_date(event_name, dt).delta(-(i + 1)))
-        elif scale == 'week':
-            events.append(self.bitmapist.WeekEvents.from_date(event_name, dt))
-            for i in range(delta):
-                events.append(self.bitmapist.WeekEvents.from_date(event_name, dt).detla(-(i + 1)))
-        elif scale == 'month':
-            events.append(self.bitmapist.MonthEvents.from_date(event_name, dt))
-            for i in range(delta):
-                events.append(self.bitmapist.MonthEvents.from_date(event_name, dt).delta(-(i + 1)))
-        elif scale == 'year':
-            events.append(self.bitmapist.YearEvents.from_date(event_name, dt))
-            for i in range(delta):
-                events.append(self.bitmapist.YearEvents.from_date(event_name, dt).delta(-(i + 1)))
-        if events:
-            if len(events) == 1:
-                self.redis_key = events[0].redis_key
-            else:
-                or_op = self.bitmapist.BitOpOr(*events)
-                self.redis_key = or_op.redis_key
-        
-    def period_start(self):
-        return self.dt
-        
-    def period_end(self):
-        return self.dt - datetime.timedelta(self.delta)
-            
-    def __repr__(self):
-        return ('{self.__class__.__name__}("{self.event_name}" '
-                '{self.scale}, {self.dt}, {self.delta})').format(self=self)
-
 class YearEvents(BaseEvents):
     """
     Events for a year.

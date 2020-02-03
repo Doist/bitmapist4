@@ -44,8 +44,6 @@ class Bitmapist(object):
         kw = {'bitmapist': self}
         self.UniqueEvents = type('UniqueEvents', (ev.UniqueEvents, ),
                                  kw)  # type: Type[ev.UniqueEvents]
-        self.RollingEvents = type('RollingEvents', (ev.RollingEvents, ),
-                                kw) # type; Type[ev.RollingEvents]
         self.YearEvents = type('YearEvents', (ev.YearEvents, ),
                                kw)  # type: Type[ev.YearEvents]
         self.MonthEvents = type('MonthEvents', (ev.MonthEvents, ),
@@ -212,6 +210,49 @@ class Bitmapist(object):
             if not event_name.startswith('bitop_'):
                 ret.add(event_name)
         return sorted(ret)
+
+    def get_rolling_events(self, event_name, scale='day', dt=None, delta=0):
+        """
+        Return events over a specified amount of time.
+        
+        Useful for determining events like the following:
+         * How many users used android between 1-12-19 and 4-12-19?
+         * How many users used ios between February and May?
+
+        The scale value can be set to the string 'day', 'week', 'month', or 'year'.
+        The dt value should be a datetime object.
+        The delta value should be an integer.
+
+        Example:
+
+            b = bitmapist4.Bitmapist()
+            date = datetime.strptime('19-02-19', '%d-%m-%y')
+            b.get_rolling_events('device:android', 'day', date, 36)
+        """
+        dt = dt or datetime.datetime.utcnow()
+        
+        events = []
+        if scale == 'day':
+            events.append(self.DayEvents.from_date(event_name, dt))
+            for i in range(delta):
+                events.append(self.DayEvents.from_date(event_name, dt).delta(-(i + 1)))
+        elif scale == 'week':
+            events.append(self.WeekEvents.from_date(event_name, dt))
+            for i in range(delta):
+                events.append(self.WeekEvents.from_date(event_name, dt).detla(-(i + 1)))
+        elif scale == 'month':
+            events.append(self.MonthEvents.from_date(event_name, dt))
+            for i in range(delta):
+                events.append(self.MonthEvents.from_date(event_name, dt).delta(-(i + 1)))
+        elif scale == 'year':
+            events.append(self.YearEvents.from_date(event_name, dt))
+            for i in range(delta):
+                events.append(self.YearEvents.from_date(event_name, dt).delta(-(i + 1)))
+        if events:
+            if len(events) == 1:
+                return(events[0])
+            else:
+                return(self.BitOpOr(*events))
 
     def delete_all_events(self):
         """
